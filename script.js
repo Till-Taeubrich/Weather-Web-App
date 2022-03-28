@@ -4,7 +4,7 @@ async function getWeatherData() {
   const userSearch = searchBar.value;
   try {
     const response = await fetch(
-      `http://api.ofetpenweathermap.org/data/2.5/weather?q=${userSearch}&APPID=ec14f259ccf044b9dbeec27752c8e621`,
+      `http://api.openweathermap.org/data/2.5/weather?q=${userSearch}&APPID=ec14f259ccf044b9dbeec27752c8e621`,
     );
     const weatherData = await response.json();
     console.log(weatherData);
