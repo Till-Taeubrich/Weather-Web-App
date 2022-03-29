@@ -44,7 +44,21 @@ function getLocationData(e, locations) {
   return locations.find((location) => location.id === Number(e.target.parentElement.dataset.id));
 }
 
+function removeUserInput() {
+  searchBar.value = '';
+}
+
+function removeLocationSelectorContent() {
+  const locationSelector = document.querySelector('.location-selector');
+
+  while (locationSelector.lastChild) {
+    locationSelector.removeChild(locationSelector.lastChild);
+  }
+}
+
 function setupNewLocation(userSelection) {
+  removeUserInput();
+  removeLocationSelectorContent();
   console.log(userSelection);
 }
 
