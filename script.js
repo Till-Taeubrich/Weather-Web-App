@@ -44,11 +44,16 @@ function getLocationData(e, locations) {
   return locations.find((location) => location.id === Number(e.target.parentElement.dataset.id));
 }
 
-function removeUserInput() {
+function clearUserInput() {
   searchBar.value = '';
 }
 
-function removeLocationSelectorContent() {
+function clearErrorDisplay() {
+  const errorDisplay = document.querySelector('.error-display');
+  errorDisplay.textContent = '';
+}
+
+function clearLocationSelectorContent() {
   const locationSelector = document.querySelector('.location-selector');
 
   while (locationSelector.lastChild) {
@@ -57,8 +62,9 @@ function removeLocationSelectorContent() {
 }
 
 function setupNewLocation(userSelection) {
-  removeUserInput();
-  removeLocationSelectorContent();
+  clearUserInput();
+  clearErrorDisplay();
+  clearLocationSelectorContent();
   console.log(userSelection);
 }
 
@@ -94,8 +100,13 @@ async function fetchWeatherData() {
 
     if (weatherData.length > 1) {
       setupLocationSelection(weatherData);
-    } else {
+    }
+    if (weatherData.length === 1) {
       setupNewLocation(weatherData[0]);
+    }
+    if (weatherData.length === 0) {
+      const errorDisplay = document.querySelector('.error-display');
+      errorDisplay.textContent = 'Location not found. Please type in a valid city name.';
     }
   } catch (error) {
     alert(error);
@@ -107,14 +118,3 @@ searchBar.addEventListener('keydown', (e) => {
     fetchWeatherData();
   }
 });
-
-// API'S
-// with exclude
-// `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={part}&appid=ec14f259ccf044b9dbeec27752c8e621`,
-// without exclude
-// `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=ec14f259ccf044b9dbeec27752c8e621`,
-
-// for each array element give id
-// render array element below searchBar (name, country, state)
-// give each element addeventlistener click
-// get lat & lon from element that's clicked on
