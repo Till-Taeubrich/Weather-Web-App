@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+
 const searchBar = document.querySelector('#search-bar');
 
 function addLocationsId(locations) {
@@ -61,11 +63,26 @@ function clearLocationSelectorContent() {
   }
 }
 
+async function fetchWeatherData(userSelection) {
+  // api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
+
+  try {
+    const response = await fetch(
+      `http://api.openweathermap.org/data/2.5/onecall?lat=${userSelection.lat}&lon=${userSelection.lon}&appid=d1c6665a3812f694a38a458d35a7bf8c`,
+      // &exclude={part}
+    );
+    const weatherData = await response.json();
+    console.log(weatherData);
+  } catch (error) {
+    alert(error);
+  }
+}
+
 function setupNewLocation(userSelection) {
   clearUserInput();
   clearErrorDisplay();
   clearLocationSelectorContent();
-  console.log(userSelection);
+  fetchWeatherData(userSelection);
 }
 
 function selectLocation(e, locations) {
@@ -90,21 +107,21 @@ function setupLocationSelection(locations) {
   addEventListenerToLocationElements(locations);
 }
 
-async function fetchWeatherData() {
+async function fetchCoordinatesData() {
   const userSelection = searchBar.value;
   try {
     const response = await fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${userSelection}&limit=5&appid=ec14f259ccf044b9dbeec27752c8e621`,
+      `http://api.openweathermap.org/geo/1.0/direct?q=${userSelection}&limit=5&appid=d1c6665a3812f694a38a458d35a7bf8c`,
     );
-    const weatherData = await response.json();
+    const coordinatesData = await response.json();
 
-    if (weatherData.length > 1) {
-      setupLocationSelection(weatherData);
+    if (coordinatesData.length > 1) {
+      setupLocationSelection(coordinatesData);
     }
-    if (weatherData.length === 1) {
-      setupNewLocation(weatherData[0]);
+    if (coordinatesData.length === 1) {
+      setupNewLocation(coordinatesData[0]);
     }
-    if (weatherData.length === 0) {
+    if (coordinatesData.length === 0) {
       const errorDisplay = document.querySelector('.error-display');
       errorDisplay.textContent = 'Location not found. Please type in a valid city name.';
     }
@@ -115,6 +132,6 @@ async function fetchWeatherData() {
 
 searchBar.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
-    fetchWeatherData();
+    fetchCoordinatesData();
   }
 });
