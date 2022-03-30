@@ -75,75 +75,93 @@ async function fetchWeatherData(userSelection) {
   }
 }
 
-function imageTransition(fileName) {
+function renderContentTransition() {
+  const webpageContent = Array.from(document.querySelector('.content').children);
+
+  webpageContent.forEach((child) => {
+    child.style.opacity = '0';
+  });
+  setTimeout(() => {
+    webpageContent.forEach((child) => {
+      child.style.opacity = '1';
+    });
+  }, 550);
+}
+
+function renderImageTransition(fileName) {
+  const webpageBody = document.querySelector('.content');
+
+  webpageBody.style.opacity = '15%';
+  setTimeout(() => {
+    webpageBody.style.opacity = '1';
+    webpageBody.style.backgroundImage = `url(./assets/${fileName}.jpg)`;
+  }, 550);
+}
+
+function renderTransition(fileName) {
   const webpageBody = document.querySelector('.content');
 
   if (
     (webpageBody.style.backgroundImage == '' && fileName === 'clear') ||
     webpageBody.style.backgroundImage === `url("./assets/${fileName}.jpg")`
   ) {
+    renderContentTransition();
     return;
   }
-
-  webpageBody.style.opacity = '15%';
-
-  setTimeout(() => {
-    webpageBody.style.opacity = '1';
-    webpageBody.style.backgroundImage = `url(./assets/${fileName}.jpg)`;
-  }, 850);
+  renderImageTransition(fileName);
 }
 
-function loadBackgroundImage(weatherData) {
+function renderNewLocation(weatherData) {
   const weatherDescription = weatherData.current.weather[0].main;
 
   switch (weatherDescription) {
     case 'Thunderstorm':
-      imageTransition('thunderstorm');
+      renderTransition('thunderstorm');
       break;
     case 'Drizzle':
-      imageTransition('drizzle');
+      renderTransition('drizzle');
       break;
     case 'Rain':
-      imageTransition('rain');
+      renderTransition('rain');
       break;
     case 'Snow':
-      imageTransition('snow');
+      renderTransition('snow');
       break;
     case 'Clear':
-      imageTransition('clear');
+      renderTransition('clear');
       break;
     case 'Clouds':
-      imageTransition('clouds');
+      renderTransition('clouds');
       break;
     case 'Mist':
-      imageTransition('mist');
+      renderTransition('mist');
       break;
     case 'Smoke':
-      imageTransition('smoke');
+      renderTransition('smoke');
       break;
     case 'Haze':
-      imageTransition('haze');
+      renderTransition('haze');
       break;
     case 'Dust':
-      imageTransition('dust');
+      renderTransition('dust');
       break;
     case 'Fog':
-      imageTransition('fog');
+      renderTransition('fog');
       break;
     case 'Sand':
-      imageTransition('sand');
+      renderTransition('sand');
       break;
     case 'Ash':
-      imageTransition('ash');
+      renderTransition('ash');
       break;
     case 'Squall':
-      imageTransition('squall');
+      renderTransition('squall');
       break;
     case 'Tornado':
-      imageTransition('tornado');
+      renderTransition('tornado');
       break;
     default:
-      imageTransition('clear');
+      renderTransition('clear');
       break;
   }
 }
@@ -154,7 +172,7 @@ async function setupNewLocation(userSelection) {
   clearLocationSelectorContent();
   const weatherData = await fetchWeatherData(userSelection);
   console.log(weatherData);
-  loadBackgroundImage(weatherData);
+  renderNewLocation(weatherData);
 }
 
 function addEventListenerToLocationElements(locations) {
