@@ -12,4 +12,5 @@
   background-image: url(./assets/clear.jpg);
   background-position: center center;
   background-size: cover;
+  transition: opacity 0.85s;
 }

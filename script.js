@@ -75,59 +75,75 @@ async function fetchWeatherData(userSelection) {
   }
 }
 
+function imageTransition(fileName) {
+  const webpageBody = document.querySelector('.content');
+
+  if (
+    (webpageBody.style.backgroundImage == '' && fileName === 'clear') ||
+    webpageBody.style.backgroundImage === `url("./assets/${fileName}.jpg")`
+  ) {
+    return;
+  }
+
+  webpageBody.style.opacity = '15%';
+
+  setTimeout(() => {
+    webpageBody.style.opacity = '1';
+    webpageBody.style.backgroundImage = `url(./assets/${fileName}.jpg)`;
+  }, 850);
+}
+
 function loadBackgroundImage(weatherData) {
   const weatherDescription = weatherData.current.weather[0].main;
-  console.log(weatherDescription);
-  const webpageBody = document.querySelector('.content');
 
   switch (weatherDescription) {
     case 'Thunderstorm':
-      webpageBody.style.backgroundImage = 'url(./assets/thunderstorm.jpg)';
+      imageTransition('thunderstorm');
       break;
     case 'Drizzle':
-      webpageBody.style.backgroundImage = 'url(./assets/drizzle.jpg)';
+      imageTransition('drizzle');
       break;
     case 'Rain':
-      webpageBody.style.backgroundImage = 'url(./assets/rain.jpg)';
+      imageTransition('rain');
       break;
     case 'Snow':
-      webpageBody.style.backgroundImage = 'url(./assets/snow.jpg)';
+      imageTransition('snow');
       break;
     case 'Clear':
-      webpageBody.style.backgroundImage = 'url(./assets/clear.jpg)';
+      imageTransition('clear');
       break;
     case 'Clouds':
-      webpageBody.style.backgroundImage = 'url(./assets/clouds.jpg)';
+      imageTransition('clouds');
       break;
     case 'Mist':
-      webpageBody.style.backgroundImage = 'url(./assets/mist.jpg)';
+      imageTransition('mist');
       break;
     case 'Smoke':
-      webpageBody.style.backgroundImage = 'url(./assets/smoke.jpg)';
+      imageTransition('smoke');
       break;
     case 'Haze':
-      webpageBody.style.backgroundImage = 'url(./assets/haze.jpg)';
+      imageTransition('haze');
       break;
     case 'Dust':
-      webpageBody.style.backgroundImage = 'url(./assets/dust.jpg)';
+      imageTransition('dust');
       break;
     case 'Fog':
-      webpageBody.style.backgroundImage = 'url(./assets/mist.jpg)';
+      imageTransition('fog');
       break;
     case 'Sand':
-      webpageBody.style.backgroundImage = 'url(./assets/dust.jpg)';
+      imageTransition('sand');
       break;
     case 'Ash':
-      webpageBody.style.backgroundImage = 'url(./assets/ash.jpg)';
+      imageTransition('ash');
       break;
     case 'Squall':
-      webpageBody.style.backgroundImage = 'url(./assets/squall.jpg)';
+      imageTransition('squall');
       break;
     case 'Tornado':
-      webpageBody.style.backgroundImage = 'url(./assets/tornado.jpg)';
+      imageTransition('tornado');
       break;
     default:
-      webpageBody.style.backgroundImage = 'url(./assets/clear.jpg)';
+      imageTransition('clear');
       break;
   }
 }
