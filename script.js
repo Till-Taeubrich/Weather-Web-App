@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
 
 const searchBar = document.querySelector('#search-bar');
@@ -42,7 +43,7 @@ function addLocationsElementId(locations) {
   }
 }
 
-function getLocationData(e, locations) {
+function getEventTargetData(e, locations) {
   return locations.find((location) => location.id === Number(e.target.parentElement.dataset.id));
 }
 
@@ -64,30 +65,80 @@ function clearLocationSelectorContent() {
 }
 
 async function fetchWeatherData(userSelection) {
-  // api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
-
   try {
     const response = await fetch(
       `http://api.openweathermap.org/data/2.5/onecall?lat=${userSelection.lat}&lon=${userSelection.lon}&appid=d1c6665a3812f694a38a458d35a7bf8c`,
-      // &exclude={part}
     );
-    const weatherData = await response.json();
-    console.log(weatherData);
+    return await response.json();
   } catch (error) {
     alert(error);
   }
 }
 
-function setupNewLocation(userSelection) {
+function loadBackgroundImage(weatherData) {
+  const weatherDescription = weatherData.current.weather[0].main;
+  console.log(weatherDescription);
+  const webpageBody = document.querySelector('.content');
+
+  switch (weatherDescription) {
+    case 'Thunderstorm':
+      webpageBody.style.backgroundImage = 'url(./assets/thunderstorm.jpg)';
+      break;
+    case 'Drizzle':
+      webpageBody.style.backgroundImage = 'url(./assets/drizzle.jpg)';
+      break;
+    case 'Rain':
+      webpageBody.style.backgroundImage = 'url(./assets/rain.jpg)';
+      break;
+    case 'Snow':
+      webpageBody.style.backgroundImage = 'url(./assets/snow.jpg)';
+      break;
+    case 'Clear':
+      webpageBody.style.backgroundImage = 'url(./assets/clear.jpg)';
+      break;
+    case 'Clouds':
+      webpageBody.style.backgroundImage = 'url(./assets/clouds.jpg)';
+      break;
+    case 'Mist':
+      webpageBody.style.backgroundImage = 'url(./assets/mist.jpg)';
+      break;
+    case 'Smoke':
+      webpageBody.style.backgroundImage = 'url(./assets/smoke.jpg)';
+      break;
+    case 'Haze':
+      webpageBody.style.backgroundImage = 'url(./assets/haze.jpg)';
+      break;
+    case 'Dust':
+      webpageBody.style.backgroundImage = 'url(./assets/dust.jpg)';
+      break;
+    case 'Fog':
+      webpageBody.style.backgroundImage = 'url(./assets/mist.jpg)';
+      break;
+    case 'Sand':
+      webpageBody.style.backgroundImage = 'url(./assets/dust.jpg)';
+      break;
+    case 'Ash':
+      webpageBody.style.backgroundImage = 'url(./assets/ash.jpg)';
+      break;
+    case 'Squall':
+      webpageBody.style.backgroundImage = 'url(./assets/squall.jpg)';
+      break;
+    case 'Tornado':
+      webpageBody.style.backgroundImage = 'url(./assets/tornado.jpg)';
+      break;
+    default:
+      webpageBody.style.backgroundImage = 'url(./assets/clear.jpg)';
+      break;
+  }
+}
+
+async function setupNewLocation(userSelection) {
   clearUserInput();
   clearErrorDisplay();
   clearLocationSelectorContent();
-  fetchWeatherData(userSelection);
-}
-
-function selectLocation(e, locations) {
-  const userSelection = getLocationData(e, locations);
-  setupNewLocation(userSelection);
+  const weatherData = await fetchWeatherData(userSelection);
+  console.log(weatherData);
+  loadBackgroundImage(weatherData);
 }
 
 function addEventListenerToLocationElements(locations) {
@@ -95,7 +146,8 @@ function addEventListenerToLocationElements(locations) {
 
   locationElements.forEach((locationElement) => {
     locationElement.addEventListener('click', (e) => {
-      selectLocation(e, locations);
+      const userSelection = getEventTargetData(e, locations);
+      setupNewLocation(userSelection);
     });
   });
 }

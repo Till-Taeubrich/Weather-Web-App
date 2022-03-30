@@ -6,3 +6,10 @@
     'Open Sans', 'Helvetica Neue', sans-serif;
   /* border: 1px red solid; */
 }
+
+.content {
+  height: 100vh;
+  background-image: url(./assets/clear.jpg);
+  background-position: center center;
+  background-size: cover;
+}
