@@ -88,7 +88,7 @@ function renderContentTransition() {
   }, 550);
 }
 
-function renderImageTransition(fileName) {
+function renderImageAndContentTransition(fileName) {
   const webpageBody = document.querySelector('.content');
 
   webpageBody.style.opacity = '15%';
@@ -101,6 +101,7 @@ function renderImageTransition(fileName) {
 function renderTransition(fileName) {
   const webpageBody = document.querySelector('.content');
 
+  // if background will be the same, then only render new content.
   if (
     (webpageBody.style.backgroundImage == '' && fileName === 'clear') ||
     webpageBody.style.backgroundImage === `url("./assets/${fileName}.jpg")`
@@ -108,7 +109,8 @@ function renderTransition(fileName) {
     renderContentTransition();
     return;
   }
-  renderImageTransition(fileName);
+  // else, render new background and new content.
+  renderImageAndContentTransition(fileName);
 }
 
 function renderNewLocation(weatherData) {
