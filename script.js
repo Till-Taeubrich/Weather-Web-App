@@ -2,6 +2,11 @@
 /* eslint-disable no-plusplus */
 
 const searchBar = document.querySelector('#search-bar');
+const metricBtn = document.querySelector('.metric-btn');
+const imperialBtn = document.querySelector('.imperial-btn');
+let metricUnits = false;
+let currentUserSelection;
+let currentWeatherData;
 
 function addLocationsId(locations) {
   for (let i = 0; i < locations.length; i++) {
@@ -36,7 +41,7 @@ function renderLocationSelector(locations) {
 }
 
 function addLocationsElementId(locations) {
-  const locationElements = document.querySelectorAll('.location');
+  const locationElements = document.querySelectorAll('.location-name');
   for (let i = 0; i < locationElements.length; i++) {
     const locationElement = locationElements[i];
     locationElement.dataset.id = locations[i].id;
@@ -67,105 +72,154 @@ function clearLocationSelectorContent() {
 async function fetchWeatherData(userSelection) {
   try {
     const response = await fetch(
-      `http://api.openweathermap.org/data/2.5/onecall?lat=${userSelection.lat}&lon=${userSelection.lon}&appid=d1c6665a3812f694a38a458d35a7bf8c`,
+      `http://api.openweathermap.org/data/2.5/onecall?lat=${userSelection.lat}&lon=${userSelection.lon}&units=imperial&appid=d1c6665a3812f694a38a458d35a7bf8c`,
     );
-    return await response.json();
+    const weatherData = await response.json();
+    return weatherData;
   } catch (error) {
     alert(error);
   }
 }
 
-function renderContentTransition() {
+function renderText(selector, textSource) {
+  document.querySelector(selector).textContent = textSource;
+}
+
+function renderTemperature(selector, value) {
+  document.querySelector(selector).textContent = value;
+  if (metricUnits) {
+    const tempInCelcius = (Number(value) - 32) * 0.5556;
+    document.querySelector(selector).textContent = `${tempInCelcius.toFixed(0)}°C`;
+    return;
+  }
+  if (metricUnits === false) {
+    document.querySelector(selector).textContent = `${value.toFixed(1)}°F`;
+  }
+}
+
+function renderPercentage(selector, value) {
+  document.querySelector(selector).textContent = `${value.toFixed(0)}%`;
+}
+
+function renderSpeed(selector, value) {
+  if (metricUnits) {
+    const speedInKmh = Number(value) * 1.609344;
+    document.querySelector(selector).textContent = `${speedInKmh.toFixed(1)}km/h`;
+    return;
+  }
+  if (metricUnits === false) {
+    document.querySelector(selector).textContent = `${value.toFixed(1)}mph`;
+  }
+}
+
+function getDayName(i) {
+  const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const todayNum = new Date().getDay() - 1 + i;
+
+  if (i === 0) {
+    return 'Today';
+  }
+
+  if (todayNum <= 6) {
+    return dayNames[todayNum];
+  }
+
+  if (todayNum > 6) {
+    return dayNames[todayNum - 7];
+  }
+}
+
+function renderUV(selector, value) {
+  document.querySelector(selector).textContent = `${value.toFixed(0)}`;
+}
+
+function renderForecast(selector, value) {
+  const forecast = document.querySelector('.forecast');
+  if (forecast.childNodes.length <= 1) {
+    for (let i = 0; i < value.length; i++) {
+      const day = value[i];
+
+      const dayElement = document.createElement('div');
+      dayElement.classList.add(`day${i}`);
+
+      const dayName = document.createElement('div');
+      dayName.textContent = getDayName(i);
+      dayElement.append(dayName);
+
+      const dayHighTemp = document.createElement('div');
+      dayHighTemp.textContent = value[i].temp.max;
+      dayElement.append(dayHighTemp);
+
+      const dayLowTemp = document.createElement('div');
+      dayLowTemp.textContent = value[i].temp.min;
+      dayElement.append(dayLowTemp);
+
+      forecast.append(dayElement);
+    }
+  }
+}
+
+function renderNewContent(weatherData, userSelection) {
+  // location
+  renderText('.location-name', userSelection.name);
+  renderText('.state', userSelection.state);
+  renderText('.country', userSelection.country);
+
+  // temperature
+  renderTemperature('.current', weatherData.current.temp);
+  renderTemperature('.feels-like', weatherData.current.feels_like);
+
+  renderPercentage('.raining-chance', weatherData.hourly[0].pop);
+
+  renderPercentage('.humidity', weatherData.current.humidity);
+
+  renderSpeed('.wind-speed', weatherData.current.wind_speed);
+
+  renderUV('.uv-index', weatherData.current.uvi);
+
+  renderForecast('.forecast', weatherData.daily);
+}
+
+function renderContentTransition(weatherData, userSelection) {
   const webpageContent = Array.from(document.querySelector('.content').children);
 
   webpageContent.forEach((child) => {
     child.style.opacity = '0';
   });
   setTimeout(() => {
+    renderNewContent(weatherData, userSelection);
     webpageContent.forEach((child) => {
       child.style.opacity = '1';
     });
   }, 550);
 }
 
-function renderImageAndContentTransition(fileName) {
+function renderImageAndContentTransition(weatherData, userSelection, fileName) {
   const webpageBody = document.querySelector('.content');
 
   webpageBody.style.opacity = '15%';
   setTimeout(() => {
-    webpageBody.style.opacity = '1';
+    renderNewContent(weatherData, userSelection);
     webpageBody.style.backgroundImage = `url(./assets/${fileName}.jpg)`;
+    setTimeout(() => {
+      webpageBody.style.opacity = '1';
+    }, 50);
   }, 550);
 }
 
-function renderTransition(fileName) {
+function renderTransition(weatherData, userSelection) {
   const webpageBody = document.querySelector('.content');
-
-  // if background will be the same, then only render new content.
-  if (
-    (webpageBody.style.backgroundImage == '' && fileName === 'clear') ||
-    webpageBody.style.backgroundImage === `url("./assets/${fileName}.jpg")`
-  ) {
-    renderContentTransition();
-    return;
-  }
-  // else, render new background and new content.
-  renderImageAndContentTransition(fileName);
-}
-
-function renderNewLocation(weatherData) {
   const weatherDescription = weatherData.current.weather[0].main;
 
-  switch (weatherDescription) {
-    case 'Thunderstorm':
-      renderTransition('thunderstorm');
-      break;
-    case 'Drizzle':
-      renderTransition('drizzle');
-      break;
-    case 'Rain':
-      renderTransition('rain');
-      break;
-    case 'Snow':
-      renderTransition('snow');
-      break;
-    case 'Clear':
-      renderTransition('clear');
-      break;
-    case 'Clouds':
-      renderTransition('clouds');
-      break;
-    case 'Mist':
-      renderTransition('mist');
-      break;
-    case 'Smoke':
-      renderTransition('smoke');
-      break;
-    case 'Haze':
-      renderTransition('haze');
-      break;
-    case 'Dust':
-      renderTransition('dust');
-      break;
-    case 'Fog':
-      renderTransition('fog');
-      break;
-    case 'Sand':
-      renderTransition('sand');
-      break;
-    case 'Ash':
-      renderTransition('ash');
-      break;
-    case 'Squall':
-      renderTransition('squall');
-      break;
-    case 'Tornado':
-      renderTransition('tornado');
-      break;
-    default:
-      renderTransition('clear');
-      break;
+  if (
+    (webpageBody.style.backgroundImage == '' && weatherDescription === 'clear') ||
+    webpageBody.style.backgroundImage === `url("./assets/${weatherDescription}.jpg")`
+  ) {
+    renderContentTransition(weatherData, userSelection);
+    return;
   }
+
+  renderImageAndContentTransition(weatherData, userSelection, weatherDescription);
 }
 
 async function setupNewLocation(userSelection) {
@@ -173,8 +227,8 @@ async function setupNewLocation(userSelection) {
   clearErrorDisplay();
   clearLocationSelectorContent();
   const weatherData = await fetchWeatherData(userSelection);
-  console.log(weatherData);
-  renderNewLocation(weatherData);
+  currentWeatherData = weatherData;
+  renderTransition(weatherData, userSelection);
 }
 
 function addEventListenerToLocationElements(locations) {
@@ -183,6 +237,7 @@ function addEventListenerToLocationElements(locations) {
   locationElements.forEach((locationElement) => {
     locationElement.addEventListener('click', (e) => {
       const userSelection = getEventTargetData(e, locations);
+      currentUserSelection = userSelection;
       setupNewLocation(userSelection);
     });
   });
@@ -195,21 +250,22 @@ function setupLocationSelection(locations) {
   addEventListenerToLocationElements(locations);
 }
 
-async function fetchCoordinatesData() {
-  const userSelection = searchBar.value;
+async function fetchLocationData() {
   try {
     const response = await fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${userSelection}&limit=5&appid=d1c6665a3812f694a38a458d35a7bf8c`,
+      `http://api.openweathermap.org/geo/1.0/direct?q=${currentUserSelection}&limit=5&appid=d1c6665a3812f694a38a458d35a7bf8c`,
     );
-    const coordinatesData = await response.json();
+    const locationData = await response.json();
 
-    if (coordinatesData.length > 1) {
-      setupLocationSelection(coordinatesData);
+    currentUserSelection = locationData;
+
+    if (locationData.length > 1) {
+      setupLocationSelection(locationData);
     }
-    if (coordinatesData.length === 1) {
-      setupNewLocation(coordinatesData[0]);
+    if (locationData.length === 1) {
+      setupNewLocation(locationData[0]);
     }
-    if (coordinatesData.length === 0) {
+    if (locationData.length === 0) {
       const errorDisplay = document.querySelector('.error-display');
       errorDisplay.textContent = 'Location not found. Please type in a valid city name.';
     }
@@ -218,8 +274,39 @@ async function fetchCoordinatesData() {
   }
 }
 
+function saveUserSelection() {
+  currentUserSelection = searchBar.value;
+}
+
 searchBar.addEventListener('keydown', (e) => {
+  const locationSelector = document.querySelector('.location-selector');
+  if (locationSelector.childNodes[1]) {
+    clearLocationSelectorContent();
+  }
   if (e.key === 'Enter') {
-    fetchCoordinatesData();
+    saveUserSelection();
+    fetchLocationData();
+  }
+});
+
+metricBtn.addEventListener('click', () => {
+  if (metricUnits === false && currentUserSelection == undefined) {
+    metricUnits = true;
+    return;
+  }
+  if (metricUnits === false) {
+    metricUnits = true;
+    renderContentTransition(currentWeatherData, currentUserSelection);
+  }
+});
+
+imperialBtn.addEventListener('click', () => {
+  if (metricUnits && currentUserSelection == undefined) {
+    metricUnits = false;
+    return;
+  }
+  if (metricUnits) {
+    metricUnits = false;
+    renderContentTransition(currentWeatherData, currentUserSelection);
   }
 });

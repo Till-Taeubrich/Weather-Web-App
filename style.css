@@ -15,6 +15,29 @@
   transition: opacity 0.55s;
 }
 
+.container.top {
+  display: flex;
+  justify-content: space-between;
+}
+
 .content > * {
   transition: opacity 0.55s;
+}
+
+.container {
+  margin: 1rem;
+}
+
+.temp-switch {
+  display: flex;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.temp-switch > * {
+  flex-basis: 50%;
+}
+
+.forecast {
+  display: flex;
 }

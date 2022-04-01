@@ -12,46 +12,42 @@
 
 <body>
   <div class="content">
-    <div class="container left">
-      <div class="temp-switch">
-        <div>C֯֯</div>
-        <div>F</div>
-      </div>
-      <div class="location-name"></div>
-      <div class="temperature">
-        <div class="current"></div>
-        <div class="feels-like"></div>
-      </div>
-      <div class="raining-chance"></div>
-    </div>
-    <div class="container right">
-      <div class="search-bar">
-        <div class="error-display"> </div>
-        <label for="search-bar">City</label>
-        <input type="text" id="search-bar">
-        <div class="location-selector"> </div>
-      </div>
-      <div class="humidity"></div>
-      <div class="wind-speed"></div>
-      <div class="uv">
-        <div class="uv-index"> </div>
-        <a class="uv-link" href="https://en.wikipedia.org/wiki/Ultraviolet_index#Index_usage">Protect Yourself</a>
-      </div>
-      <div class="suntime">
-        <div class="sunrise"> </div>
-        <div class="sunset"> </div>
-      </div>
-      <div class="container bottom">
-        <div class="datetime">
-          <div class="date"></div>
-          <div class="time"></div>
+    <div class="container top">
+      <div class="container left">
+        <div class="temp-switch">
+          <div class="metric-btn">°C</div>
+          <div class="imperial-btn">°F</div>
         </div>
-        <div class="forecast">
-          <div class="hourly"></div>
-          <div class="daily"></div>
+        <div class="location">
+          <div class="location-name"></div>
+          <div class="state"></div>
+          <div class="country"></div>
+        </div>
+        <div class="temperature">
+          <div class="current"></div>
+          <div class="feels-like"></div>
+        </div>
+        <div class="raining-chance"></div>
+      </div>
+      <div class="container right">
+        <div class="search-bar">
+          <div class="error-display"> </div>
+          <label for="search-bar">City</label>
+          <input type="text" id="search-bar">
+          <div class="location-selector"> </div>
+        </div>
+        <div class="humidity"></div>
+        <div class="wind-speed"></div>
+        <div class="uv">
+          <div class="uv-index"> </div>
+          <a class="uv-link" href="https://en.wikipedia.org/wiki/Ultraviolet_index#Index_usage">Protect Yourself</a>
         </div>
       </div>
     </div>
+    <div class="container bottom">
+      <div class="forecast"> </div>
+    </div>
+  </div>
   </div>
 </body>
 
