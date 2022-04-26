@@ -1,4 +1,8 @@
 * {
+  /* color: #f4cb87; */
+  color: #ffffff;
+  font-weight: bold;
+  /* background-color: #d7afaf; */
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
@@ -7,37 +11,202 @@
   /* border: 1px red solid; */
 }
 
+/* patterns */
+.container {
+  margin: 1rem;
+}
+
+.row {
+  margin-bottom: 1.8rem;
+}
+
+/* elements */
+
 .content {
   height: 100vh;
   background-image: url(./assets/clear.jpg);
   background-position: center center;
   background-size: cover;
-  transition: opacity 0.55s;
+  transition: opacity 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content > * {
+  transition: opacity 0.2s;
 }
 
 .container.top {
   display: flex;
   justify-content: space-between;
+  margin-top: 0;
+  flex-basis: 75%;
 }
 
-.content > * {
-  transition: opacity 0.55s;
-}
-
-.container {
-  margin: 1rem;
-}
-
+/* top-left */
 .temp-switch {
   display: flex;
-  border: 1px solid black;
   text-align: center;
+  gap: 1rem;
 }
 
 .temp-switch > * {
-  flex-basis: 50%;
+  border: 2px solid white;
+  border-radius: 0.3rem;
+  width: 2rem;
+  cursor: pointer;
+}
+
+.location-name {
+  font-size: 2rem;
+}
+
+.state,
+.country {
+  font-size: 1.5rem;
+}
+
+.current {
+  font-size: 4rem;
+}
+
+.feels-like {
+  font-size: 1.5rem;
+}
+
+.feels-like-div {
+  display: block;
+  font-size: 1rem;
+}
+
+.raining-chance {
+  font-size: 1.5rem;
+}
+
+.raining-chance-div {
+  display: block;
+  font-size: 1rem;
+}
+
+/* top-right */
+
+.container.top-right {
+  /* prob. change */
+  width: 13rem;
+  /* prob. change */
+}
+
+.error-display {
+  /* position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  font-size: 2rem; */
+}
+
+.location-alert {
+  display: none;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.2rem;
+}
+
+.location-alert.active {
+  display: block;
+}
+
+.location-selector {
+  display: flex;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* flex-wrap: wrap; */
+  /* gap: 4rem; */
+}
+
+.location-selector > .location {
+  cursor: pointer;
+  margin: 2rem;
+}
+
+.search-bar-field {
+  display: flex;
+}
+
+#search-bar {
+  border: none;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0);
+  color: beige;
+  border-bottom: 2px solid beige;
+}
+
+.search-icon {
+  filter: invert(91%) sepia(12%) saturate(383%) hue-rotate(328deg) brightness(107%) contrast(84%);
+}
+
+.weather-details {
+  margin-top: 5rem;
+}
+
+.weather-details > * {
+  margin-left: 6rem;
+}
+
+.humidity-div,
+.wind-speed-div,
+.uv-index-value-div {
+  font-size: 0.9rem;
+}
+
+.humidity,
+.wind-speed,
+.uv-index-value {
+  font-size: 1.7rem;
+}
+
+.humidity,
+.wind-speed,
+.uv-link {
+  margin-bottom: 4rem;
+}
+
+.uv-index-value {
+  margin-left: 1.5rem;
+}
+
+.uv-link {
+  font-size: 0.5rem;
+}
+
+/* bottom */
+.container.bottom {
+  flex-basis: 25%;
+  margin-top: 2rem;
 }
 
 .forecast {
   display: flex;
+  justify-content: space-between;
 }
+
+.forecast > * > div:first-child {
+  font-size: 1.5rem;
+  margin-bottom: 1.3rem;
+}
+
+.forecast > * > div:nth-child(2) {
+  font-size: 1.6rem;
+  margin-bottom: 0.2rem;
+}
+
+.forecast > * > div:last-child {
+  font-size: 1rem;
+}
+
+/* background */

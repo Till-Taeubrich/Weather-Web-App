@@ -8,6 +8,14 @@ let metricUnits = false;
 let currentUserSelection;
 let currentWeatherData;
 
+function showAlert() {
+  document.querySelector('.location-alert').classList.add('active');
+}
+
+function removeAlert() {
+  document.querySelector('.location-alert').classList.remove('active');
+}
+
 function addLocationsId(locations) {
   for (let i = 0; i < locations.length; i++) {
     const location = locations[i];
@@ -98,6 +106,10 @@ function renderTemperature(selector, value) {
 }
 
 function renderPercentage(selector, value) {
+  if (selector === '.raining-chance') {
+    document.querySelector(selector).textContent = `${(value * 100).toFixed(0)}%`;
+    return;
+  }
   document.querySelector(selector).textContent = `${value.toFixed(0)}%`;
 }
 
@@ -137,8 +149,6 @@ function renderForecast(selector, value) {
   const forecast = document.querySelector('.forecast');
   if (forecast.childNodes.length <= 1) {
     for (let i = 0; i < value.length; i++) {
-      const day = value[i];
-
       const dayElement = document.createElement('div');
       dayElement.classList.add(`day${i}`);
 
@@ -147,11 +157,11 @@ function renderForecast(selector, value) {
       dayElement.append(dayName);
 
       const dayHighTemp = document.createElement('div');
-      dayHighTemp.textContent = value[i].temp.max;
+      dayHighTemp.textContent = `H: ${value[i].temp.max}°F`;
       dayElement.append(dayHighTemp);
 
       const dayLowTemp = document.createElement('div');
-      dayLowTemp.textContent = value[i].temp.min;
+      dayLowTemp.textContent = `L: ${value[i].temp.min}°F`;
       dayElement.append(dayLowTemp);
 
       forecast.append(dayElement);
@@ -168,14 +178,20 @@ function renderNewContent(weatherData, userSelection) {
   // temperature
   renderTemperature('.current', weatherData.current.temp);
   renderTemperature('.feels-like', weatherData.current.feels_like);
+  renderText('.feels-like-div', 'Feels Like:');
 
   renderPercentage('.raining-chance', weatherData.hourly[0].pop);
+  renderText('.raining-chance-div', 'Chance of Rain:');
 
+  renderText('.humidity-div', 'Humidity:');
   renderPercentage('.humidity', weatherData.current.humidity);
 
+  renderText('.wind-speed-div', 'Wind Speed:');
   renderSpeed('.wind-speed', weatherData.current.wind_speed);
 
-  renderUV('.uv-index', weatherData.current.uvi);
+  renderText('.uv-index-value-div', 'UV index:');
+  renderUV('.uv-index-value', weatherData.current.uvi);
+  renderText('.uv-link', 'Protect Yourself');
 
   renderForecast('.forecast', weatherData.daily);
 }
@@ -191,7 +207,7 @@ function renderContentTransition(weatherData, userSelection) {
     webpageContent.forEach((child) => {
       child.style.opacity = '1';
     });
-  }, 550);
+  }, 200);
 }
 
 function renderImageAndContentTransition(weatherData, userSelection, fileName) {
@@ -204,7 +220,7 @@ function renderImageAndContentTransition(weatherData, userSelection, fileName) {
     setTimeout(() => {
       webpageBody.style.opacity = '1';
     }, 50);
-  }, 550);
+  }, 200);
 }
 
 function renderTransition(weatherData, userSelection) {
@@ -212,8 +228,8 @@ function renderTransition(weatherData, userSelection) {
   const weatherDescription = weatherData.current.weather[0].main;
 
   if (
-    (webpageBody.style.backgroundImage == '' && weatherDescription === 'clear') ||
-    webpageBody.style.backgroundImage === `url("./assets/${weatherDescription}.jpg")`
+    (webpageBody.style.backgroundImage == '' && weatherDescription === 'clear')
+    || webpageBody.style.backgroundImage === `url("./assets/${weatherDescription}.jpg")`
   ) {
     renderContentTransition(weatherData, userSelection);
     return;
@@ -239,11 +255,13 @@ function addEventListenerToLocationElements(locations) {
       const userSelection = getEventTargetData(e, locations);
       currentUserSelection = userSelection;
       setupNewLocation(userSelection);
+      removeAlert();
     });
   });
 }
 
 function setupLocationSelection(locations) {
+  showAlert();
   addLocationsId(locations);
   renderLocationSelector(locations);
   addLocationsElementId(locations);
@@ -263,6 +281,7 @@ async function fetchLocationData() {
       setupLocationSelection(locationData);
     }
     if (locationData.length === 1) {
+      currentUserSelection = locationData[0];
       setupNewLocation(locationData[0]);
     }
     if (locationData.length === 0) {
@@ -282,6 +301,7 @@ searchBar.addEventListener('keydown', (e) => {
   const locationSelector = document.querySelector('.location-selector');
   if (locationSelector.childNodes[1]) {
     clearLocationSelectorContent();
+    removeAlert();
   }
   if (e.key === 'Enter') {
     saveUserSelection();

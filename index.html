@@ -13,41 +13,53 @@
 <body>
   <div class="content">
     <div class="container top">
-      <div class="container left">
-        <div class="temp-switch">
+      <div class="container top-left">
+        <div class="temp-switch row">
           <div class="metric-btn">°C</div>
           <div class="imperial-btn">°F</div>
         </div>
-        <div class="location">
+        <div class="location row">
           <div class="location-name"></div>
           <div class="state"></div>
           <div class="country"></div>
         </div>
-        <div class="temperature">
+        <div class="temperature row">
           <div class="current"></div>
+          <div class="feels-like-div"></div>
           <div class="feels-like"></div>
         </div>
-        <div class="raining-chance"></div>
+        <div class="raining-chance-div"></div>
+        <div class="raining-chance row"></div>
       </div>
-      <div class="container right">
+      <div class="container top-right">
         <div class="search-bar">
-          <div class="error-display"> </div>
-          <label for="search-bar">City</label>
-          <input type="text" id="search-bar">
-          <div class="location-selector"> </div>
+          <div class="error-display"></div>
+          <div class="search-bar-field">
+            <img class="search-icon" src="/assets/magnify.svg" alt="">
+            <input placeholder="Search Location..." type="text" id="search-bar">
+          </div>
+          <div class="location-alert">Choose Your Location:</div>
+          <div class="location-selector">
+          </div>
         </div>
-        <div class="humidity"></div>
-        <div class="wind-speed"></div>
-        <div class="uv">
-          <div class="uv-index"> </div>
-          <a class="uv-link" href="https://en.wikipedia.org/wiki/Ultraviolet_index#Index_usage">Protect Yourself</a>
+        <div class="weather-details">
+          <div class="humidity-div"></div>
+          <div class="humidity"></div>
+          <div class="wind-speed-div"></div>
+          <div class="wind-speed"></div>
+          <div class="uv">
+            <div class="uv-index-value-div"> </div>
+            <div class="uv-index">
+              <div class="uv-index-value"> </div>
+            </div>
+            <a class="uv-link" target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Ultraviolet_index#Index_usage"></a>
+          </div>
         </div>
       </div>
     </div>
-    <div class="container bottom">
-      <div class="forecast"> </div>
-    </div>
-  </div>
+      <div class="container bottom">
+        <div class="forecast container"> </div>
+      </div>
   </div>
 </body>
 
